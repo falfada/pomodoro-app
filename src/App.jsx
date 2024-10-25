@@ -8,8 +8,10 @@ function App() {
       <header>
         <h1>Pomodoro App</h1>
       </header>
-      <Timer/>
-      <Settings/>
+      <main>
+        <Timer />
+        <Settings />
+      </main>
     </div>
   );
 }
