@@ -1,17 +1,54 @@
-import Countdown from "react-countdown";
+import { useState, useRef, useEffect } from "react";
+import Countdown, { zeroPad } from "react-countdown";
 import CircularProgressBar from "./CircularProgressBar";
 import TimerControls from "./TimerControls";
 
 function TimerDisplay({ timerCountdown }) {
-    const renderer = ({minutes, seconds}) => {
-        return <span>{minutes}:{seconds}</span>;
-    }
+  const targetTimeRef = useRef(Date.now() + timerCountdown);
+  const [remainingTime, setRemainingTime] = useState(timerCountdown);
+  const [isPaused, setIsPaused] = useState(true);
+  const countdownPointer = useRef(null);
 
+  useEffect(() => {
+    setRemainingTime(timerCountdown);
+    targetTimeRef.current = Date.now() + timerCountdown;
+  }, [timerCountdown]);
+
+  const renderer = ({ minutes, seconds }) => {
+    return (
+      <span>
+        {minutes}:{zeroPad(seconds)}
+      </span>
+    );
+  };
+
+  const handleStart = () => {
+    countdownPointer.current?.start();
+    setIsPaused(false);
+  };
+
+  const handlePause = () => {
+    countdownPointer.current?.pause();
+    setIsPaused(true);
+  };
+  const handleTick = (total) => {
+    setRemainingTime(total);
+  };
   return (
     <section>
       <CircularProgressBar />
-      <Countdown date={Date.now() + timerCountdown} renderer={renderer} onStart={handleUpdate} autoStart={false}/>
-      <TimerControls />
+      <Countdown
+        ref={countdownPointer}
+        date={targetTimeRef.current}
+        renderer={renderer}
+        autoStart={false}
+        onTick={handleTick}
+      />
+      <TimerControls
+        isPaused={isPaused}
+        onStart={handleStart}
+        onPause={handlePause}
+      />
     </section>
   );
 }
