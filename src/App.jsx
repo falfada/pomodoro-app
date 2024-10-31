@@ -3,6 +3,7 @@ import Timer from "./components/Timer";
 import Settings from "./components/Settings";
 
 function App() {
+  
   return (
     <div>
       <header>
@@ -10,7 +11,7 @@ function App() {
       </header>
       <main>
         <Timer />
-        <Settings />
+        <Settings pomodoro={20} shortBreak={5} longBreak={10}/>
       </main>
     </div>
   );
